@@ -1,0 +1,75 @@
+Detailed breakdown of signal_generator.py
+
+---
+
+### Imports
+
+import numpy as np
+- numpy is imported for efficient numerical operations, especially for generating time vectors and sine waves.
+
+---
+
+### SignalGenerator Class
+
+Purpose:
+- Encapsulates methods to generate time samples and different types of signals (target, jammer, composite) for signal processing tasks.
+
+---
+
+__init__ Method
+
+def __init__(self, sample_rate=1000, duration=1):
+    self.fs = sample_rate
+    self.t = np.linspace(0, duration, int(sample_rate * duration), endpoint=False)
+
+- sample_rate: Number of samples per second (Hz). Default is 1000.
+- duration: Length of the signal in seconds. Default is 1.
+- self.fs: Stores the sampling rate.
+- self.t: Generates a time vector from 0 to duration (not including the endpoint), with sample_rate * duration samples.
+
+---
+
+generate_target_signal Method
+
+def generate_target_signal(self, freq=50, amplitude=1.0):
+    return amplitude * np.sin(2 * np.pi * freq * self.t)
+
+- Generates a sine wave (target signal).
+- freq: Frequency of the sine wave (Hz). Default is 50.
+- amplitude: Amplitude of the sine wave. Default is 1.0.
+- Returns: Array of sine wave values at each time sample.
+
+---
+
+generate_jammer_signal Method
+
+def generate_jammer_signal(self, freq=200, amplitude=0.8, phase=np.pi/4):
+    return amplitude * np.sin(2 * np.pi * freq * self.t + phase)
+
+- Generates a sine wave (jammer signal) with a phase offset.
+- freq: Frequency of the jammer (Hz). Default is 200.
+- amplitude: Amplitude of the jammer. Default is 0.8.
+- phase: Phase offset (radians). Default is π/4.
+- Returns: Array of sine wave values at each time sample, phase-shifted.
+
+---
+
+generate_composite Method
+
+def generate_composite(self, target_freq=50, jammer_freq=200):
+    target = self.generate_target_signal(target_freq)
+    jammer = self.generate_jammer_signal(jammer_freq)
+    return target + jammer
+
+- Generates a composite signal by summing a target and a jammer signal.
+- target_freq: Frequency for the target signal. Default is 50 Hz.
+- jammer_freq: Frequency for the jammer signal. Default is 200 Hz.
+- Returns: Array representing the sum of the target and jammer signals.
+
+---
+
+Summary
+
+- The class allows you to easily generate time samples and different types of signals for testing or analysis.
+- You can customize sample rate, duration, frequencies, amplitudes, and phase.
+- Useful for simulating signals in digital signal processing

@@ -1,0 +1,68 @@
+Detailed breakdown of kalman_filter.py
+
+---
+
+### Imports
+
+import numpy as np
+- numpy is imported for efficient numerical operations, especially for handling arrays and mathematical calculations.
+
+---
+
+### KalmanFilter1D Class
+
+Purpose:
+- Implements a simple 1D Kalman filter for estimating the state of a system from noisy measurements.
+
+---
+
+__init__ Method
+
+def __init__(self, process_variance=1e-5, measurement_variance=0.1**2):
+    self.x = 0.0  # Estimate
+    self.P = 1.0  # Estimation error
+    self.Q = process_variance
+    self.R = measurement_variance
+
+- process_variance: Variance of the process noise (Q). Default is 1e-5.
+- measurement_variance: Variance of the measurement noise (R). Default is 0.01.
+- self.x: Initial estimate of the state (set to 0.0).
+- self.P: Initial estimation error (set to 1.0).
+- self.Q: Process noise variance.
+- self.R: Measurement noise variance.
+
+---
+
+filter Method
+
+def filter(self, measurements):
+    estimates = []
+    for z in measurements:
+        # Prediction step
+        self.P += self.Q
+
+        # Kalman gain
+        K = self.P / (self.P + self.R)
+
+        # Update step
+        self.x += K * (z - self.x)
+        self.P *= (1 - K)
+
+        estimates.append(self.x)
+    return np.array(estimates)
+
+- measurements: Sequence of observed values (array-like).
+- For each measurement z:
+  - Prediction step: Updates the estimation error (self.P) by adding process noise (self.Q).
+  - Kalman gain (K): Determines the weight given to the new measurement.
+  - Update step: Updates the estimate (self.x) and estimation error (self.P) using the Kalman gain and the new measurement.
+  - Appends the updated estimate to the estimates list.
+- Returns: Array of filtered (estimated) values.
+
+---
+
+Summary
+
+- The class provides a simple way to filter noisy 1D measurements using the Kalman filter algorithm.
+- You can customize the process and measurement noise variances.
+- Useful for smoothing and estimating the true state from noisy data in signal processing and control applications.

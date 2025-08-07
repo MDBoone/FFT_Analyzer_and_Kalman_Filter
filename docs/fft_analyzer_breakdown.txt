@@ -1,0 +1,49 @@
+Detailed breakdown of fft_analyzer.py
+
+---
+
+### Imports
+
+import numpy as np
+- numpy is imported for efficient numerical operations, especially for performing FFT and frequency calculations.
+
+---
+
+### FFTAnalyzer Class
+
+Purpose:
+- Provides methods to perform Fast Fourier Transform (FFT) analysis on signals, extracting their frequency components.
+
+---
+
+__init__ Method
+
+def __init__(self, sample_rate):
+    self.fs = sample_rate
+
+- sample_rate: Number of samples per second (Hz).
+- self.fs: Stores the sampling rate for use in frequency calculations.
+
+---
+
+compute_fft Method
+
+def compute_fft(self, signal):
+    fft_vals = np.fft.fft(signal)
+    freqs = np.fft.fftfreq(len(signal), d=1/self.fs)
+    return freqs[:len(freqs)//2], np.abs(fft_vals)[:len(freqs)//2]
+
+- signal: Input time-domain signal (array-like).
+- fft_vals: Computes the FFT of the input signal.
+- freqs: Calculates the frequency bins corresponding to the FFT result.
+- Returns:
+  - The positive frequency components (first half of the spectrum).
+  - The magnitudes of those frequency components.
+
+---
+
+Summary
+
+- The class allows you to analyze the frequency content of time-domain signals.
+- You can specify the sample rate for accurate frequency axis calculation.
+- Useful for digital signal processing and spectral analysis tasks.
