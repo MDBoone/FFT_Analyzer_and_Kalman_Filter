@@ -5,14 +5,14 @@ Detailed breakdown of signal_generator.py
 ### Imports
 
 import numpy as np
-- numpy is imported for efficient numerical operations, especially for generating time vectors and sine waves.
+- numpy is imported for efficient numerical operations, especially for generating time vectors, sine waves, and noise.
 
 ---
 
 ### SignalGenerator Class
 
 Purpose:
-- Encapsulates methods to generate time samples and different types of signals (target, jammer, composite) for signal processing tasks.
+- Encapsulates methods to generate time samples and different types of signals (target, jammer, composite with noise) for signal processing tasks.
 
 ---
 
@@ -56,20 +56,22 @@ def generate_jammer_signal(self, freq=200, amplitude=0.8, phase=np.pi/4):
 
 generate_composite Method
 
-def generate_composite(self, target_freq=50, jammer_freq=200):
+def generate_composite(self, target_freq=50, jammer_freq=200, noise_std=0.1):
     target = self.generate_target_signal(target_freq)
     jammer = self.generate_jammer_signal(jammer_freq)
-    return target + jammer
+    noise = np.random.normal(0, noise_std, size=self.t.shape)
+    return target + jammer + noise
 
-- Generates a composite signal by summing a target and a jammer signal.
+- Generates a composite signal by summing a target, a jammer, and Gaussian noise.
 - target_freq: Frequency for the target signal. Default is 50 Hz.
 - jammer_freq: Frequency for the jammer signal. Default is 200 Hz.
-- Returns: Array representing the sum of the target and jammer signals.
+- noise_std: Standard deviation of the Gaussian noise. Default is 0.1.
+- Returns: Array representing the sum of the target, jammer, and noise signals.
 
 ---
 
 Summary
 
 - The class allows you to easily generate time samples and different types of signals for testing or analysis.
-- You can customize sample rate, duration, frequencies, amplitudes, and phase.
-- Useful for simulating signals in digital signal processing
+- You can customize sample rate, duration, frequencies, amplitudes, phase, and noise level.
+- Useful for simulating signals in digital signal processing and communications.

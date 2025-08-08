@@ -2,7 +2,7 @@ import numpy as np
 
 class SignalGenerator:
     def __init__(self, sample_rate=1000, duration=1):
-        self.fs = sample_rate
+        self.fs = sample_rate #increase sample rate for better resolution but uses more memory. Decrease for less memory but lower resolution
         self.t = np.linspace(0, duration, int(sample_rate * duration), endpoint=False)
 
     def generate_target_signal(self, freq=50, amplitude=1.0):

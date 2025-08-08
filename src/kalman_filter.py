@@ -1,24 +1,19 @@
-import numpy as np
-
 class KalmanFilter1D:
     def __init__(self, process_variance=1e-5, measurement_variance=0.1**2):
-        self.x = 0.0  # Estimate
-        self.P = 1.0  # Estimation error
-        self.Q = process_variance
-        self.R = measurement_variance
+        self.process_variance = process_variance
+        self.measurement_variance = measurement_variance
+        self.posteri_estimate = 0.0
+        self.posteri_error_estimate = 1.0
 
-    def filter(self, measurements):
-        estimates = []
-        for z in measurements:
-            # Prediction step
-            self.P += self.Q
+    def update(self, measurement):
+        priori_estimate = self.posteri_estimate
+        priori_error_estimate = self.posteri_error_estimate + self.process_variance
 
-            # Kalman gain
-            K = self.P / (self.P + self.R)
+        kalman_gain = priori_error_estimate / (priori_error_estimate + self.measurement_variance)
+        self.posteri_estimate = priori_estimate + kalman_gain * (measurement - priori_estimate)
+        self.posteri_error_estimate = (1 - kalman_gain) * priori_error_estimate
 
-            # Update step
-            self.x += K * (z - self.x)
-            self.P *= (1 - K)
+        return self.posteri_estimate
 
-            estimates.append(self.x)
-        return np.array(estimates)
+    def filter(self, signal):
+        return [self.update(meas) for meas in signal]

@@ -1,0 +1,55 @@
+Detailed breakdown of plot_utils.py
+
+---
+
+### Imports
+
+import matplotlib.pyplot as plt
+- matplotlib.pyplot is imported for creating plots and visualizing data.
+
+---
+
+### plot_signal Function
+
+def plot_signal(time, signal, title="Signal", label="Signal"):
+    plt.plot(time, signal, label=label)
+    plt.title(title)
+    plt.xlabel("Time (s)")
+    plt.ylabel("Amplitude")
+    plt.legend()
+    plt.grid(True)
+    plt.show()
+
+- Plots a time-domain signal.
+- time: Array of time values (x-axis).
+- signal: Array of signal values (y-axis).
+- title: Title of the plot. Default is "Signal".
+- label: Label for the signal in the legend. Default is "Signal".
+- Adds grid, labels, and legend for clarity.
+- Displays the plot window.
+
+---
+
+### plot_fft Function
+
+def plot_fft(freqs, magnitudes, title="FFT Spectrum"):
+    plt.plot(freqs, magnitudes)
+    plt.title(title)
+    plt.xlabel("Frequency (Hz)")
+    plt.ylabel("Magnitude")
+    plt.grid(True)
+    plt.show()
+
+- Plots the magnitude spectrum of a signal (FFT result).
+- freqs: Array of frequency values (x-axis).
+- magnitudes: Array of magnitude values (y-axis).
+- title: Title of the plot. Default is "FFT Spectrum".
+- Adds grid and axis labels for clarity.
+- Displays the plot window.
+
+---
+
+Summary
+
+- The file provides utility functions for visualizing time-domain signals and their frequency spectra.
+- Useful for analyzing and presenting signal processing results.

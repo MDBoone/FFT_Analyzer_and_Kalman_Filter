@@ -2,67 +2,56 @@ Detailed breakdown of kalman_filter.py
 
 ---
 
-### Imports
-
-import numpy as np
-- numpy is imported for efficient numerical operations, especially for handling arrays and mathematical calculations.
-
----
-
 ### KalmanFilter1D Class
 
 Purpose:
-- Implements a simple 1D Kalman filter for estimating the state of a system from noisy measurements.
+- Implements a 1D Kalman filter for estimating the state of a system from noisy measurements, using a standard predict-update cycle.
 
 ---
 
 __init__ Method
 
 def __init__(self, process_variance=1e-5, measurement_variance=0.1**2):
-    self.x = 0.0  # Estimate
-    self.P = 1.0  # Estimation error
-    self.Q = process_variance
-    self.R = measurement_variance
+    self.process_variance = process_variance
+    self.measurement_variance = measurement_variance
+    self.posteri_estimate = 0.0
+    self.posteri_error_estimate = 1.0
 
 - process_variance: Variance of the process noise (Q). Default is 1e-5.
 - measurement_variance: Variance of the measurement noise (R). Default is 0.01.
-- self.x: Initial estimate of the state (set to 0.0).
-- self.P: Initial estimation error (set to 1.0).
-- self.Q: Process noise variance.
-- self.R: Measurement noise variance.
+- posteri_estimate: Initial estimate of the state (set to 0.0).
+- posteri_error_estimate: Initial estimation error (set to 1.0).
+
+---
+
+update Method
+
+def update(self, measurement):
+    priori_estimate = self.posteri_estimate
+    priori_error_estimate = self.posteri_error_estimate + self.process_variance
+    kalman_gain = priori_error_estimate / (priori_error_estimate + self.measurement_variance)
+    self.posteri_estimate = priori_estimate + kalman_gain * (measurement - priori_estimate)
+    self.posteri_error_estimate = (1 - kalman_gain) * priori_error_estimate
+    return self.posteri_estimate
+
+- measurement: The new observed value.
+- Performs the predict and update steps of the Kalman filter.
+- Returns: The updated state estimate.
 
 ---
 
 filter Method
 
-def filter(self, measurements):
-    estimates = []
-    for z in measurements:
-        # Prediction step
-        self.P += self.Q
+def filter(self, signal):
+    return [self.update(meas) for meas in signal]
 
-        # Kalman gain
-        K = self.P / (self.P + self.R)
-
-        # Update step
-        self.x += K * (z - self.x)
-        self.P *= (1 - K)
-
-        estimates.append(self.x)
-    return np.array(estimates)
-
-- measurements: Sequence of observed values (array-like).
-- For each measurement z:
-  - Prediction step: Updates the estimation error (self.P) by adding process noise (self.Q).
-  - Kalman gain (K): Determines the weight given to the new measurement.
-  - Update step: Updates the estimate (self.x) and estimation error (self.P) using the Kalman gain and the new measurement.
-  - Appends the updated estimate to the estimates list.
-- Returns: Array of filtered (estimated) values.
+- signal: Sequence of observed values (array-like).
+- Returns: List of filtered (estimated) values for the entire signal.
 
 ---
 
 Summary
 
-- The class provides a simple way to filter noisy 1D measurements using the Kalman filter algorithm.
+- The class provides a standard 1D Kalman filter implementation for smoothing and estimating the true state from noisy data.
 - You can customize the process and measurement noise variances.
-- Useful for smoothing and estimating the true state from noisy data in signal processing and control applications.
+- Useful for signal smoothing, tracking, and estimation in signal processing and control applications.
